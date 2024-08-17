@@ -1,0 +1,49 @@
+services:
+  database:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: passadmin
+      MYSQL_DATABASE: appdb
+      MYSQL_USER: dev
+      MYSQL_PASSWORD: admin@dev
+    volumes:
+      - ./data:/var/lib/mysql
+    ports:
+      - 3306:3306
+    networks:
+      - my-networks
+
+  front-app:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    env_file:
+      - ./frontend/.env
+    ports:
+      - 8080:8080
+    depends_on:
+      - database
+    restart: always
+    networks:
+      - my-networks
+  
+  backend-app:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      - APP_MODE=release
+    env_file:
+      - ./backend/.env
+    ports:
+      - 8000:8000
+    depends_on:
+      - database
+    restart: always
+    networks:
+      - my-networks
+
+
+networks:
+  my-networks:
