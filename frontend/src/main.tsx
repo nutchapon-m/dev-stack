@@ -1,6 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import App from './App.tsx'
+import { App, ProtectRoute } from './App.tsx'
 import './index.css'
 
 import {
@@ -12,7 +12,13 @@ import {
 const router = createBrowserRouter([
   {
     path:'/',
-    element: <App />
+    element: <h1>404 Not found</h1>,
+    children: [
+      {
+        path:"home",
+        element: <ProtectRoute component={<App />}/>
+      }
+    ]
   }
 ])
 
